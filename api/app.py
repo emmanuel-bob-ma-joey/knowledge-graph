@@ -42,6 +42,8 @@ def get_tags():
                     
                     # Get the introductory paragraph of the most relevant article
                     intro_paragraph,link = get_intro_paragraph_and_link(most_relevant_title)
+                    if len(intro_paragraph)>100:
+                        intro_paragraph=intro_paragraph[:100]+"..."
                     print(intro_paragraph,link)
                     output[most_relevant_title] = [intro_paragraph,link]
             else:

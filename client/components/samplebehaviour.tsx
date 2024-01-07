@@ -17,10 +17,15 @@ interface TreeNode {
 
 interface SampleBehaviourProps {
   tree: TreeNode;
+  //   addChildrenToTreeNode: (children: TreeNode[], id: string) => void;
 }
 
-const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ tree }) => {
+const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
+  tree,
+  //   addChildrenToTreeNode,
+}) => {
   const { graph, apis } = useContext(GraphinContext);
+  const url = "http://127.0.0.1:5000/api/tag";
 
   useEffect(() => {
     const handleHover = (evt: IG6GraphEvent) => {
@@ -35,27 +40,80 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ tree }) => {
       console.log("node clicked");
       const node = evt.item as INode;
       const model = node.getModel() as NodeConfig;
-      console.log(model.id);
-      console.log("i am in samplebehaviour and this is the tree data:", tree);
-      tree.description = "poopy poop";
+      //   console.log("the clicked node is ", model.id);
+      //   console.log("this is model in samplebehaviour", model);
+      //   console.log("i am in samplebehaviour and this is the tree data:", tree);
+      //   tree.description = "poopy poop";
 
-      const newNode = {
-        id: "newNodeId", // Unique identifier for the new node
-        data: {
-          lable: "New Node",
-          id: "poop",
-        },
-        // style: {
-        //   keyshape: {
-        //     size: 30, // Size of the node
-        //   },
-        // },
-        // shape: "circle", // You can change the shape based on your requirements
-        // x: 100, // X-coordinate of the new node
-        // y: 100, // Y-coordinate of the new node
+      //   const newNode = {
+      //     id: "poop", // Unique identifier for the new node
+      //     description: "poopy",
+      //     link: "asda",
+      //     children: [],
+      //   };
+
+      //   const newEdge = {
+      //     source: "root",
+      //     target: "poop",
+      //   };
+      //   graph.addItem("edge", newEdge);
+      //   graph.addItem("node", newNode);
+
+      //addChildrenToTreeNode([newNode], "root");
+      //   model.children = [newNode];
+      //   console.log("children added");
+
+      const query = {
+        text: model.description,
       };
-      graph.add("node", newNode);
+
+      if (model.children!.length == 0) {
+        axios
+          .post(url, query, {
+            headers: {
+              "Content-Type": "application/json",
+
+              // Add any other headers as needed
+            },
+          })
+          .then((response) => {
+            console.log("Success:", response.data);
+            for (var key in response.data) {
+              console.log("added node ", key);
+              model.children!.push({
+                id: key,
+                link: response.data[key][1],
+                description: response.data[key][0],
+                children: [],
+                style: {
+                  label: {
+                    value: key, // add label
+                  },
+                },
+              });
+              console.log("children added");
+            }
+            console.log("updated tree", tree);
+            //addChildrenToTreeNode([newNode], "root");
+            // walk(tree, (node) => {
+            //   node.style = {
+            //     label: {
+            //       value: node.id, // add label
+            //     },
+            //   };
+            // });
+            // setState({
+            //   data: tree,
+            // });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else {
+        console.log("nah");
+      }
     };
+
     // Each click focuses on the clicked node
     graph.on("node:mouseover", handleHover);
     graph.on("node:click", handleClick);

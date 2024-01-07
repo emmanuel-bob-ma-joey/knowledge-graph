@@ -33,24 +33,24 @@ const Home: React.FC = forwardRef((props, ref) => {
   const [value, setValue] = React.useState("");
   const [submit, setSubmit] = React.useState(false);
   const [tree, setTree] = React.useState(rootNode);
-  const elementRef = useRef<HTMLDivElement>(null);
+  // const elementRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (submit && elementRef.current) {
-      // Scroll to the element when it is displayed
-      elementRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [submit]);
+  // useEffect(() => {
+  //   if (submit && elementRef.current) {
+  //     // Scroll to the element when it is displayed
+  //     elementRef.current.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // }, [submit]);
 
-  useEffect(() => {
-    if (ref) {
-      if (typeof ref === "function") {
-        ref(elementRef.current);
-      } else {
-        ref.current = elementRef.current;
-      }
-    }
-  }, [ref]);
+  // useEffect(() => {
+  //   if (ref) {
+  //     if (typeof ref === "function") {
+  //       ref(elementRef.current);
+  //     } else {
+  //       ref.current = elementRef.current;
+  //     }
+  //   }
+  // }, [ref]);
 
   const handleSubmit = () => {
     setTree({
@@ -67,7 +67,6 @@ const Home: React.FC = forwardRef((props, ref) => {
       {submit ? (
         <section className="flex flex-col items-center justify-center ">
           <CompactBox treeData={tree} />
-          <div ref={elementRef}></div>
         </section>
       ) : (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">

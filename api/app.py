@@ -11,14 +11,18 @@ def get_tags():
     try:
        
         # Get the request JSON data
-        data = request.get_json()
+        #data = request.get_json()
+        data = request.data.decode('UTF-8')
+        print(data)
         # Check if the "user_id" key exists in the JSON data
-        text = data['text']
+        #text = data['text']
+        text=data
         blob = TextBlob(text)
         nouns = list(blob.noun_phrases)
         output = {}
         
         for noun in nouns:
+            print(noun)
             params = {
             'action': 'query',
             'format': 'json',

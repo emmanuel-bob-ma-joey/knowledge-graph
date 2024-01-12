@@ -18,19 +18,25 @@ var pos = require("pos");
 
 interface TreeNode {
   id: string;
+  title: string;
   link: string;
   description: string;
   children: TreeNode[];
+  style: any;
 }
 const rootNode: TreeNode = {
-  id: "root",
+  id: "1",
+  title: "root",
   link: "",
   description: "",
   children: [],
+  style: {
+    label: "root",
+  },
 };
 
 const Home: React.FC = forwardRef((props, ref) => {
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(" ");
   const [submit, setSubmit] = React.useState(false);
   const [tree, setTree] = React.useState(rootNode);
   // const elementRef = useRef<HTMLDivElement>(null);
@@ -53,12 +59,7 @@ const Home: React.FC = forwardRef((props, ref) => {
   // }, [ref]);
 
   const handleSubmit = () => {
-    setTree({
-      id: "root",
-      link: "",
-      description: value,
-      children: [],
-    });
+    setTree({ ...rootNode, description: value });
     setSubmit(true);
   };
 

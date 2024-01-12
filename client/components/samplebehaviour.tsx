@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 
 import Graphin, {
   Behaviors,
@@ -17,17 +17,24 @@ interface TreeNode {
 
 interface SampleBehaviourProps {
   tree: TreeNode;
-  //   addChildrenToTreeNode: (children: TreeNode[], id: string) => void;
+  setTreeNode: (treenode: NodeConfig, id: string) => void;
 }
+
+const uniqueId = () => {
+  const dateString = Date.now().toString(36);
+  const randomness = Math.random().toString(36).substr(2);
+  return dateString + randomness;
+};
 
 const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
   tree,
-  //   addChildrenToTreeNode,
+  setTreeNode,
 }) => {
   const { graph, apis } = useContext(GraphinContext);
   const url = "http://127.0.0.1:5000/api/tag";
-
+  const isMounted = useRef(false);
   useEffect(() => {
+    console.log("samplebehaviour has been rendered");
     const handleHover = (evt: IG6GraphEvent) => {
       console.log("node hovered");
       const node = evt.item as INode;
@@ -36,40 +43,20 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
       //apis.focusNodeById(model.id);
     };
 
-    const handleClick = (evt: IG6GraphEvent) => {
-      console.log("node clicked");
+    const handleChange = (e: IG6GraphEvent) => {
+      const { item, collapsed } = e;
+      const model = item!.get("model");
+      console.log("this is the model", model);
+
+      model.collapsed = collapsed;
+    };
+
+    const handleClick = async (evt: IG6GraphEvent) => {
       const node = evt.item as INode;
       const model = node.getModel() as NodeConfig;
-      //   console.log("the clicked node is ", model.id);
-      //   console.log("this is model in samplebehaviour", model);
-      //   console.log("i am in samplebehaviour and this is the tree data:", tree);
-      //   tree.description = "poopy poop";
-
-      //   const newNode = {
-      //     id: "poop", // Unique identifier for the new node
-      //     description: "poopy",
-      //     link: "asda",
-      //     children: [],
-      //   };
-
-      //   const newEdge = {
-      //     source: "root",
-      //     target: "poop",
-      //   };
-      //   graph.addItem("edge", newEdge);
-      //   graph.addItem("node", newNode);
-
-      //addChildrenToTreeNode([newNode], "root");
-      //   model.children = [newNode];
-      //   console.log("children added");
-
-      const query = {
-        text: model.description,
-      };
-
       if (model.children!.length == 0) {
         axios
-          .post(url, query, {
+          .post(url, model.description, {
             headers: {
               "Content-Type": "application/json",
 
@@ -81,7 +68,8 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
             for (var key in response.data) {
               console.log("added node ", key);
               model.children!.push({
-                id: key,
+                id: uniqueId(),
+                title: key,
                 link: response.data[key][1],
                 description: response.data[key][0],
                 children: [],
@@ -91,10 +79,13 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
                   },
                 },
               });
+              model.collapsed = false;
               console.log("children added");
             }
             console.log("updated tree", tree);
-            //addChildrenToTreeNode([newNode], "root");
+            console.log("updated model", model);
+            console.log("model is of type", typeof model);
+            setTreeNode(model, model.id);
             // walk(tree, (node) => {
             //   node.style = {
             //     label: {
@@ -111,16 +102,20 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
           });
       } else {
         console.log("nah");
+        console.log("the tree", tree);
       }
     };
 
-    // Each click focuses on the clicked node
-    graph.on("node:mouseover", handleHover);
-    graph.on("node:click", handleClick);
-    return () => {
-      graph.off("node:mouseover", handleHover);
-      graph.off("node:click", handleClick);
-    };
+    if (isMounted.current) {
+      graph.on("node:click", handleClick);
+
+      return () => {
+        graph.off("node:click", handleClick);
+      };
+    } else {
+      console.log("onload");
+      isMounted.current = true;
+    }
   }, []);
 
   return null;

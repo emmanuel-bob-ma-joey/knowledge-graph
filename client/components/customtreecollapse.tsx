@@ -44,14 +44,18 @@ const CustomTreeCollapse: React.FunctionComponent<TreeCollapseProps> = (
       const { item, collapsed } = e;
       const model = item!.get("model");
       console.log("this is the model", model);
+      console.log("collapsed is", collapsed);
+
       model.collapsed = collapsed;
       if (onChange) {
         onChange(item, collapsed as boolean); // callback
       }
     };
     graph.on("itemcollapsed", handleChange);
+    //graph.on("node:click", handleChange);
     return () => {
       graph.off("itemcollapsed", handleChange);
+      //graph.on("node:click", handleChange);
     };
   }, []);
 

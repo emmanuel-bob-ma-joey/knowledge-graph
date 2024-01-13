@@ -38,28 +38,7 @@ var pos = require("pos");
 const Home: React.FC = forwardRef((props, ref) => {
   const [value, setValue] = React.useState(" ");
   const [submit, setSubmit] = React.useState(false);
-  // const [tree, setTree] = React.useState(rootNode);
-  // const elementRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   if (submit && elementRef.current) {
-  //     // Scroll to the element when it is displayed
-  //     elementRef.current.scrollIntoView({ behavior: "smooth" });
-  //   }
-  // }, [submit]);
-
-  // useEffect(() => {
-  //   if (ref) {
-  //     if (typeof ref === "function") {
-  //       ref(elementRef.current);
-  //     } else {
-  //       ref.current = elementRef.current;
-  //     }
-  //   }
-  // }, [ref]);
-
   const handleSubmit = () => {
-    // setTree({ ...rootNode, description: value });
     setSubmit(true);
   };
 
@@ -83,10 +62,13 @@ const Home: React.FC = forwardRef((props, ref) => {
       ) : (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
           <div className="inline-block max-w-lg text-center justify-center">
-            <h1 className={title()}>Learn by&nbsp;</h1>
-            <h1 className={title({ color: "violet" })}>building&nbsp;</h1>
+            <h1 className={title()}>Learn by building&nbsp;</h1>
             <br />
-            <h1 className={title()}>Knowledge Graphs.</h1>
+            <h1 className={title({ color: "violet" })}>
+              knowledge graphs&nbsp;
+            </h1>
+
+            {/* <h1 className={title()}>Knowledge Graphs.</h1> */}
             <h2 className={subtitle({ class: "mt-4" })}>
               Enter text to get started
             </h2>

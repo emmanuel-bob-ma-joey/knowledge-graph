@@ -1,17 +1,19 @@
 import React, { useEffect, useContext, useRef } from "react";
 import { CircularProgress } from "@nextui-org/react";
-import type { TooltipValue } from "@antv/graphin";
+import type { Graph, TooltipValue } from "@antv/graphin";
+import G6 from "@antv/g6";
 import Graphin, {
   Behaviors,
   Components,
   IG6GraphEvent,
   GraphinContext,
 } from "@antv/graphin";
+import GraphinInstance from "@antv/graphin";
 import { INode, NodeConfig } from "@antv/g6";
 import axios from "axios";
 import SampleBehaviour from "../components/samplebehaviour";
 import CustomTreeCollapse from "./customtreecollapse";
-const { ActivateRelations, Hoverable } = Behaviors;
+const { ActivateRelations, Hoverable, TreeCollapse } = Behaviors;
 const { Tooltip } = Components;
 
 interface TreeNode {
@@ -58,51 +60,36 @@ export type PlacementType = "top" | "bottom" | "right" | "left";
 const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
   const url = "http://127.0.0.1:5000/api/tag";
   const [loading, setLoading] = React.useState(false);
-  //   const [state, setState] = React.useState({
-  //     data: null,
-  //   });
   const isMounted = useRef(false);
-
   const [tree, setTree] = React.useState(treeData);
-  console.log("tree has been reset");
-  console.log(tree);
-
-  //const { graph, apis } = React.useContext(GraphinContext);
-  //   const graphinContext = useContext(GraphinContext);
-  //   const { graph, bindEvents } = graphinContext;
-  //   console.log("this is first graph", graph);
+  const graphRef = useRef(null);
 
   const setTreeNode = (treenode: TreeNode, id: string) => {
     //assumes id is garuant
     console.log("current tree", tree);
     let clone = structuredClone(tree);
-    console.log("current tree clone is", clone);
-    console.log("current tree is", tree);
     //setTree(clone);
     var queue: TreeNode[] = [];
     queue.push(clone);
     while (queue.length) {
       let child = queue.shift()!;
       if (child!.id == id) {
-        console.log("old node", child);
         child.children = child.children.concat(treenode.children);
-        console.log("new node", child);
-        console.log("new tree clone", clone);
-        console.log("updating new tree");
+
         setTree(clone);
         break;
       } else {
-        console.log(id, "does not match with", child.id);
-        console.log(
-          "node with id",
-          child.id,
-          "and title",
-          child.title,
-          "has children",
-          child.children
-        );
+        // console.log(id, "does not match with", child.id);
+        // console.log(
+        //   "node with id",
+        //   child.id,
+        //   "and title",
+        //   child.title,
+        //   "has children",
+        //   child.children
+        // );
         queue = queue.concat(child.children);
-        console.log("new queue is", queue);
+        // console.log("new queue is", queue);
       }
     }
 
@@ -110,16 +97,8 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
   };
 
   useEffect(() => {
-    if (isMounted.current) {
-      console.log("compact box re-rendered");
-      console.log("tree", tree);
-      //console.log("graph has been rerendered with", tree);
-    } else {
-      console.log("inital tree", tree);
+    if (!isMounted.current) {
       isMounted.current = true;
-      const query = {
-        text: tree.description,
-      };
       setLoading(true);
       axios
         .post(url, "!!!".concat(tree.description), {
@@ -146,7 +125,6 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
               },
             });
           }
-
           //tree.collapse = false;
           walk(copy, (node) => {
             node.style = {
@@ -154,21 +132,25 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
                 value: node.title, // add label
               },
             };
-            node.collapse = true;
+            //node.collapse = true;
           });
-          console.log("this is the initial tree copy", copy);
           setTree(copy);
-          // setState({
-          //   data: tree,
-          // });
           setLoading(false);
-          // console.log("this is also graph", graph);
         })
         .catch((error) => {
           console.error("Error:", error);
         });
     }
   }, []);
+
+  const exportGraph = () => {
+    if (graphRef.current) {
+      const { graph, apis } = graphRef.current as Graphin;
+      graph.downloadFullImage("tree-graph");
+
+      // console.log(graph.width);
+    }
+  };
 
   return (
     <div
@@ -177,12 +159,13 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
         justifyContent: "center",
         alignItems: "center",
         width: "100vw",
-        height: "100vh",
+        height: "90vh",
       }}
     >
       {tree && !loading ? (
         <Graphin
           data={tree}
+          ref={graphRef}
           theme={{ mode: "dark" }}
           fitView
           style={{ width: "100%", height: "100%" }}
@@ -207,7 +190,7 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
           }}
         >
           {/* <FitView /> */}
-          <CustomTreeCollapse trigger="click" />
+          <TreeCollapse trigger="click" />
           <ActivateRelations />
           {/* <Hoverable bindType="node" /> */}
           <SampleBehaviour setTreeNode={setTreeNode} />
@@ -240,6 +223,7 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
               return null;
             }}
           </Tooltip>
+          <button onClick={exportGraph}>Export Graph</button>
         </Graphin>
       ) : (
         <div className="items-center justify-center">

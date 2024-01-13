@@ -61,6 +61,6 @@ export const siteConfig = {
   ],
   links: {
     github: "https://github.com/emmanuel-bob-ma-joey/RabbitDive",
-    sponsor: "https://patreon.com/jrgarciadev",
+    sponsor: "#",
   },
 };

@@ -20,19 +20,27 @@ interface TreeNode {
   link: string;
   description: string;
   children: TreeNode[];
+  style: any;
 }
-// const rootNode: TreeNode = {
-//   id: "root",
-//   link: "",
-//   description: "",
-//   children: [],
-//   style:
-// };
+const rootNode: TreeNode = {
+  id: "1",
+  title: "root",
+  link: "",
+  description: "",
+  children: [],
+  style: {
+    label: "root",
+  },
+};
 const uniqueId = () => {
   const dateString = Date.now().toString(36);
   const randomness = Math.random().toString(36).substr(2);
   return dateString + randomness;
 };
+
+interface CompactBoxProps {
+  treeData: TreeNode;
+}
 
 const walk = (
   node: { children: any[] },
@@ -47,7 +55,7 @@ const walk = (
 };
 export type PlacementType = "top" | "bottom" | "right" | "left";
 
-const CompactBox = (props: any) => {
+const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
   const url = "http://127.0.0.1:5000/api/tag";
   const [loading, setLoading] = React.useState(false);
   //   const [state, setState] = React.useState({
@@ -55,54 +63,49 @@ const CompactBox = (props: any) => {
   //   });
   const isMounted = useRef(false);
 
-  const [tree, setTree] = React.useState(props.treeData);
+  const [tree, setTree] = React.useState(treeData);
+  console.log("tree has been reset");
+  console.log(tree);
 
   //const { graph, apis } = React.useContext(GraphinContext);
   //   const graphinContext = useContext(GraphinContext);
   //   const { graph, bindEvents } = graphinContext;
   //   console.log("this is first graph", graph);
 
-  //   const [placement, setPlacement] = React.useState<PlacementType>("top");
-  //   const [hasArrow, setArrow] = React.useState<boolean>(true);
-  //   const [styleText, setStyleText] = React.useState<string>(`{
-  //     "width":"400px",
-  //     "opacity":1
-
-  //   }`);
-  //   let style = {};
-  //   try {
-  //     style = JSON.parse(styleText);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-
-  const getTreeChildren = (treenode: TreeNode) => {
-    return treenode.children;
-  };
-
-  const setTreeNode = (treenode: NodeConfig, id: string) => {
+  const setTreeNode = (treenode: TreeNode, id: string) => {
     //assumes id is garuant
-    console.log("called setTreeNode");
-    const clone = structuredClone(tree);
-    let queue = [clone];
-    var child;
+    console.log("current tree", tree);
+    let clone = structuredClone(tree);
+    console.log("current tree clone is", clone);
+    console.log("current tree is", tree);
+    //setTree(clone);
+    var queue: TreeNode[] = [];
+    queue.push(clone);
     while (queue.length) {
-      child = queue.shift();
+      let child = queue.shift()!;
       if (child!.id == id) {
-        child!.children = treenode.children;
-        console.log("added children to node", child!.id);
-        console.log("new tree is", clone);
-        console.log("old tree is", tree);
+        console.log("old node", child);
+        child.children = child.children.concat(treenode.children);
+        console.log("new node", child);
+        console.log("new tree clone", clone);
+        console.log("updating new tree");
         setTree(clone);
         break;
       } else {
-        console.log(clone);
         console.log(id, "does not match with", child.id);
-        console.log("node with id", child.id, "has children", child.children);
+        console.log(
+          "node with id",
+          child.id,
+          "and title",
+          child.title,
+          "has children",
+          child.children
+        );
         queue = queue.concat(child.children);
         console.log("new queue is", queue);
       }
     }
+
     return;
   };
 
@@ -110,6 +113,7 @@ const CompactBox = (props: any) => {
     if (isMounted.current) {
       console.log("compact box re-rendered");
       console.log("tree", tree);
+      //console.log("graph has been rerendered with", tree);
     } else {
       console.log("inital tree", tree);
       isMounted.current = true;
@@ -118,7 +122,7 @@ const CompactBox = (props: any) => {
       };
       setLoading(true);
       axios
-        .post(url, tree.description, {
+        .post(url, "!!!".concat(tree.description), {
           headers: {
             "Content-Type": "text/plain",
 
@@ -127,8 +131,9 @@ const CompactBox = (props: any) => {
         })
         .then((response) => {
           console.log("Success:", response.data);
+          let copy = structuredClone(tree);
           for (var key in response.data) {
-            tree.children.push({
+            copy.children.push({
               id: uniqueId(),
               title: key,
               link: response.data[key][1],
@@ -141,9 +146,9 @@ const CompactBox = (props: any) => {
               },
             });
           }
-          console.log("updated tree", tree);
-          tree.collapse = false;
-          walk(tree, (node) => {
+
+          //tree.collapse = false;
+          walk(copy, (node) => {
             node.style = {
               label: {
                 value: node.title, // add label
@@ -151,6 +156,8 @@ const CompactBox = (props: any) => {
             };
             node.collapse = true;
           });
+          console.log("this is the initial tree copy", copy);
+          setTree(copy);
           // setState({
           //   data: tree,
           // });
@@ -161,8 +168,7 @@ const CompactBox = (props: any) => {
           console.error("Error:", error);
         });
     }
-  });
-  console.log("this is the tree", tree);
+  }, []);
 
   return (
     <div
@@ -204,7 +210,7 @@ const CompactBox = (props: any) => {
           <CustomTreeCollapse trigger="click" />
           <ActivateRelations />
           {/* <Hoverable bindType="node" /> */}
-          <SampleBehaviour tree={tree} setTreeNode={setTreeNode} />
+          <SampleBehaviour setTreeNode={setTreeNode} />
           <Tooltip
             bindType="node"
             placement="top"

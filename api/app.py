@@ -12,13 +12,16 @@ def get_tags():
        
         # Get the request JSON data
         #data = request.get_json()
-        data = request.data.decode('UTF-8')
-        print(data)
+        inputdata = request.data.decode('UTF-8').split("!!!")
+      
+
+        
         # Check if the "user_id" key exists in the JSON data
         #text = data['text']
-        text=data
+        text=inputdata[1]
         blob = TextBlob(text)
-        nouns = list(blob.noun_phrases)
+        nouns = list(set(blob.noun_phrases)-set(inputdata[0]))
+        print("nouns",nouns)
         output = {}
         
         for noun in nouns:
@@ -43,13 +46,17 @@ def get_tags():
                     # Get the title of the most relevant result
                     most_relevant_result = search_results[0]
                     most_relevant_title = most_relevant_result['title']
+                    print("most relevant title:",most_relevant_title)
+                    print(inputdata[0])
+         
+                    if "\""+most_relevant_title!=inputdata[0]:
                     
-                    # Get the introductory paragraph of the most relevant article
-                    intro_paragraph,link = get_intro_paragraph_and_link(most_relevant_title)
-                    if len(intro_paragraph)>100:
-                        intro_paragraph=intro_paragraph[:100]+"..."
-                    print(intro_paragraph,link)
-                    output[most_relevant_title] = [intro_paragraph,link]
+                        # Get the introductory paragraph of the most relevant article
+                        intro_paragraph,link = get_intro_paragraph_and_link(most_relevant_title)
+                        if len(intro_paragraph)>200:
+                            intro_paragraph=intro_paragraph[:200]+"..."
+                        print(intro_paragraph,link)
+                        output[most_relevant_title] = [intro_paragraph,link]
             else:
                 return f"Error: Unable to fetch data. Status code {response.status_code}"
         return jsonify(output)

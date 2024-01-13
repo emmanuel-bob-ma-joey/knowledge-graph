@@ -10,14 +10,15 @@ import axios from "axios";
 
 interface TreeNode {
   id: string;
+  title: string;
   link: string;
   description: string;
   children: TreeNode[];
+  style: any;
 }
 
 interface SampleBehaviourProps {
-  tree: TreeNode;
-  setTreeNode: (treenode: NodeConfig, id: string) => void;
+  setTreeNode: (treenode: TreeNode, id: string) => void;
 }
 
 const uniqueId = () => {
@@ -26,37 +27,31 @@ const uniqueId = () => {
   return dateString + randomness;
 };
 
-const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
-  tree,
-  setTreeNode,
-}) => {
+const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
   const { graph, apis } = useContext(GraphinContext);
   const url = "http://127.0.0.1:5000/api/tag";
   const isMounted = useRef(false);
   useEffect(() => {
-    console.log("samplebehaviour has been rendered");
+    //console.log("samplebehaviour has been rendered");
     const handleHover = (evt: IG6GraphEvent) => {
       console.log("node hovered");
       const node = evt.item as INode;
       const model = node.getModel() as NodeConfig;
-      console.log(model.description);
       //apis.focusNodeById(model.id);
     };
 
     const handleChange = (e: IG6GraphEvent) => {
       const { item, collapsed } = e;
       const model = item!.get("model");
-      console.log("this is the model", model);
-
       model.collapsed = collapsed;
     };
 
     const handleClick = async (evt: IG6GraphEvent) => {
       const node = evt.item as INode;
-      const model = node.getModel() as NodeConfig;
+      const model = node.getModel() as unknown as TreeNode;
       if (model.children!.length == 0) {
         axios
-          .post(url, model.description, {
+          .post(url, String(model.title!).concat("!!!", model.description!), {
             headers: {
               "Content-Type": "application/json",
 
@@ -65,9 +60,9 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
           })
           .then((response) => {
             console.log("Success:", response.data);
+            const clone = structuredClone(model);
             for (var key in response.data) {
-              console.log("added node ", key);
-              model.children!.push({
+              clone.children!.push({
                 id: uniqueId(),
                 title: key,
                 link: response.data[key][1],
@@ -79,13 +74,10 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
                   },
                 },
               });
-              model.collapsed = false;
-              console.log("children added");
+              //model.collapsed = false;
             }
-            console.log("updated tree", tree);
-            console.log("updated model", model);
-            console.log("model is of type", typeof model);
-            setTreeNode(model, model.id);
+            console.log("updated model", clone);
+            setTreeNode(clone, clone.id);
             // walk(tree, (node) => {
             //   node.style = {
             //     label: {
@@ -102,21 +94,22 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({
           });
       } else {
         console.log("nah");
-        console.log("the tree", tree);
       }
     };
 
     if (isMounted.current) {
+      console.log("sample behaviour rendered");
       graph.on("node:click", handleClick);
 
       return () => {
         graph.off("node:click", handleClick);
       };
     } else {
-      console.log("onload");
+      console.log("sample behaviour mount");
       isMounted.current = true;
+      // graph.on("node:click", handleClick);
     }
-  }, []);
+  });
 
   return null;
 };

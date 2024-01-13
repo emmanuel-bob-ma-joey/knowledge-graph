@@ -16,29 +16,29 @@ import CompactBox from "../components/compactbox";
 
 var pos = require("pos");
 
-interface TreeNode {
-  id: string;
-  title: string;
-  link: string;
-  description: string;
-  children: TreeNode[];
-  style: any;
-}
-const rootNode: TreeNode = {
-  id: "1",
-  title: "root",
-  link: "",
-  description: "",
-  children: [],
-  style: {
-    label: "root",
-  },
-};
+// interface TreeNode {
+//   id: string;
+//   title: string;
+//   link: string;
+//   description: string;
+//   children: TreeNode[];
+//   style: any;
+// }
+// const rootNode: TreeNode = {
+//   id: "1",
+//   title: "root",
+//   link: "",
+//   description: "",
+//   children: [],
+//   style: {
+//     label: "root",
+//   },
+// };
 
 const Home: React.FC = forwardRef((props, ref) => {
   const [value, setValue] = React.useState(" ");
   const [submit, setSubmit] = React.useState(false);
-  const [tree, setTree] = React.useState(rootNode);
+  // const [tree, setTree] = React.useState(rootNode);
   // const elementRef = useRef<HTMLDivElement>(null);
 
   // useEffect(() => {
@@ -59,7 +59,7 @@ const Home: React.FC = forwardRef((props, ref) => {
   // }, [ref]);
 
   const handleSubmit = () => {
-    setTree({ ...rootNode, description: value });
+    // setTree({ ...rootNode, description: value });
     setSubmit(true);
   };
 
@@ -67,7 +67,18 @@ const Home: React.FC = forwardRef((props, ref) => {
     <section className="items-center justify-center">
       {submit ? (
         <section className="flex flex-col items-center justify-center ">
-          <CompactBox treeData={tree} />
+          <CompactBox
+            treeData={{
+              id: "1",
+              title: "root",
+              link: "",
+              description: value,
+              children: [],
+              style: {
+                label: "root",
+              },
+            }}
+          />
         </section>
       ) : (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">

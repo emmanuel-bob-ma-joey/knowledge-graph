@@ -60,7 +60,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/emmanuel-bob-ma-joey/RabbitDive",
+    github: "https://github.com/emmanuel-bob-ma-joey/knowledge-graph",
     sponsor: "#",
   },
 };

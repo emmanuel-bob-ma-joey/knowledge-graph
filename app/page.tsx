@@ -127,6 +127,7 @@ const Home: React.FC = forwardRef((props, ref) => {
             >
               Generate graph
             </Button>
+            <a href="/test">link text</a>
           </div>
         </section>
       )}

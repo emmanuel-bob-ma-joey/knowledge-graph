@@ -1,13 +1,4 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "./**",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "backend/**",
-      "use": "@vercel/python"
-    }
-  ]
+  "routes": [{ "src": "/api/tag", "dest": "/api/tag.py" }]
 }

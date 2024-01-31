@@ -6,7 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 base_url = "https://en.wikipedia.org/w/api.php"
-@app.route('/api/tag', methods=['POST'])
+@app.route('/', methods=['POST'])
 def get_tags():
     try:
        

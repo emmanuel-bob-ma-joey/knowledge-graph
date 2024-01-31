@@ -58,7 +58,7 @@ const walk = (
 export type PlacementType = "top" | "bottom" | "right" | "left";
 
 const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
-  const url = "http://localhost:5000/api/tag";
+  const url = "/api/tag";
   const [loading, setLoading] = React.useState(false);
   const isMounted = useRef(false);
   const [tree, setTree] = React.useState(treeData);

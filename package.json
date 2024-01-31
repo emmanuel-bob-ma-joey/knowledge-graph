@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "flask-dev": "FLASK_DEBUG=1 pip3 install -r requirements.txt && python3 -m flask --app backend/index run -p 5000 --reload",
+    "flask-dev": "FLASK_DEBUG=1 pip3 install -r requirements.txt && python3 -m flask --app backend/tag run -p 5000 --reload",
     "next-dev": "next dev",
-    "dev": "concurrently \"pnpm run next-dev\" \"pnpm run flask-dev\"",
+    "dev": "concurrently \"npm run next-dev\" \"npm run flask-dev\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

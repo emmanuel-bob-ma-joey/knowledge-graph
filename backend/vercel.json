@@ -13,5 +13,5 @@
     }
   ],
 
-  "ignoreCommand": "./script.sh"
+  "buildCommand": " python -m textblob.download_corpora"
 }

@@ -1,0 +1,8 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "pip3 install -r requirements.txt && python3 -m textblob.download_corpora"
+  },
+  "dependencies": {}
+}

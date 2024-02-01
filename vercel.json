@@ -1,4 +1,8 @@
 {
-  "version": 2,
-  "routes": [{ "src": "/api/tag", "dest": "/api/tag.py" }]
+  "functions": {
+    "api/**/*.py": {
+      "excludeFiles": "public/**",
+      "includeFiles": "api/**"
+    }
+  }
 }

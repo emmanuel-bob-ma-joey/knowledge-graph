@@ -1,4 +1,4 @@
 flask
 requests
 textblob
-flask_cors
+flask-cors

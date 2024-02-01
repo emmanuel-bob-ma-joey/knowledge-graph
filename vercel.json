@@ -1,7 +1,15 @@
 {
   "functions": {
     "api/**/*.py": {
-      "excludeFiles": "public/**",
+      "excludeFiles": [
+        "public/**",
+        "static/**",
+        "components/**",
+        "styles/**",
+        "types/**",
+        "package.json",
+        "package-lock.json"
+      ],
       "includeFiles": "api/**"
     }
   }

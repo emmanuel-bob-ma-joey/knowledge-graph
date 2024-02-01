@@ -2,8 +2,7 @@ from flask import Flask, jsonify, request
 import requests
 from textblob import TextBlob
 from flask_cors import CORS
-import nltk
-nltk.download()
+
 
 app = Flask(__name__)
 CORS(app)

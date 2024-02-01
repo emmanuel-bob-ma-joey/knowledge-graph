@@ -58,7 +58,7 @@ const walk = (
 export type PlacementType = "top" | "bottom" | "right" | "left";
 
 const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
-  const url = "/api/tag";
+  const url = "https://knowledge-graph-backend.vercel.app/";
   const [loading, setLoading] = React.useState(false);
   const isMounted = useRef(false);
   const [tree, setTree] = React.useState(treeData);

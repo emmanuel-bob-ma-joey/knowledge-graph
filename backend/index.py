@@ -94,7 +94,9 @@ def get_intro_paragraph_and_link(title):
     else:
         return f"Error: Unable to fetch data. Status code {response.status_code}"
 
-
+@app.route('/test', methods=['GET'])
+def test():
+    return jsonify("success")
 
 
 if __name__ == '__main__':

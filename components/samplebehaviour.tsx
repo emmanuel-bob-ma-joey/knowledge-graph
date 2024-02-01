@@ -30,7 +30,7 @@ const uniqueId = () => {
 const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
   const { graph, apis } = useContext(GraphinContext);
   console.log("graph", graph);
-  const url = "http://localhost:5000/api/tag";
+  const url = "https://knowledge-graph-backend.vercel.app/";
   const isMounted = useRef(false);
   useEffect(() => {
     //console.log("samplebehaviour has been rendered");

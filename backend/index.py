@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 import requests
 from textblob import TextBlob
 from flask_cors import CORS
+import nltk
+nltk.download()
 
 app = Flask(__name__)
 CORS(app)
@@ -13,9 +15,7 @@ def get_tags():
         # Get the request JSON data
         #data = request.get_json()
         inputdata = request.data.decode('UTF-8').split("!!!")
-      
 
-        
         # Check if the "user_id" key exists in the JSON data
         #text = data['text']
         text=inputdata[1]

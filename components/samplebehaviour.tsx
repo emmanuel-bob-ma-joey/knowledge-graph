@@ -54,7 +54,7 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
         axios
           .post(url, String(model.title!).concat("!!!", model.description!), {
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "text/plain",
 
               // Add any other headers as needed
             },

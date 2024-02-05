@@ -1,7 +1,16 @@
 from flask import Flask, jsonify, request
 import requests
+from pathlib import Path
+import os
+
+
+path = Path(__file__).parent.absolute()
+os.environ["NLTK_DATA"] = str(path)+"/data"
+print(os.environ["NLTK_DATA"])
+
 from textblob import TextBlob
 from flask_cors import CORS
+
 
 
 app = Flask(__name__)

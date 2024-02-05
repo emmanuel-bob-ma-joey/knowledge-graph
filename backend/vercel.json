@@ -11,5 +11,7 @@
       "src": "/(.*)",
       "dest": "/"
     }
-  ]
+  ],
+
+  "buildCommand": "python -m textblob.download_corpora && next build"
 }

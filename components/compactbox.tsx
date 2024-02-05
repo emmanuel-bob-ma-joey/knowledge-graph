@@ -1,6 +1,15 @@
 import React, { useEffect, useContext, useRef } from "react";
-import { CircularProgress } from "@nextui-org/react";
+import {
+  CircularProgress,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Avatar,
+  Button,
+} from "@nextui-org/react";
 import type { Graph, TooltipValue } from "@antv/graphin";
+import { Toolbar } from "@antv/graphin-components";
 import G6 from "@antv/g6";
 import Graphin, {
   Behaviors,
@@ -152,6 +161,10 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
     }
   };
 
+  const openNewTab = (url: string): void => {
+    window.open(url, "_blank");
+  };
+
   return (
     <div
       style={{
@@ -159,72 +172,140 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
         justifyContent: "center",
         alignItems: "center",
         width: "100vw",
-        height: "90vh",
+        height: "100vh",
       }}
     >
       {tree && !loading ? (
-        <Graphin
-          data={tree}
-          ref={graphRef}
-          theme={{ mode: "dark" }}
-          fitView
-          style={{ width: "100%", height: "100%" }}
-          layout={{
-            type: "compactBox",
-            direction: "TB",
-            getId: function getId(d: { id: any }) {
-              return d.id;
-            },
-            getHeight: function getHeight() {
-              return 16;
-            },
-            getWidth: function getWidth() {
-              return 200;
-            },
-            getVGap: function getVGap() {
-              return 80;
-            },
-            getHGap: function getHGap() {
-              return 20;
-            },
-          }}
-        >
-          {/* <FitView /> */}
-          <TreeCollapse trigger="click" />
-          <ActivateRelations />
-          {/* <Hoverable bindType="node" /> */}
-          <SampleBehaviour setTreeNode={setTreeNode} />
-          <Tooltip
-            bindType="node"
-            placement="top"
-            hasArrow={true}
-            style={{ width: "400px", opacity: 1 }}
-          >
-            {(value: TooltipValue) => {
-              if (value.model) {
-                const node = value.item as INode;
-                const model = node.getModel() as unknown as TreeNode;
-                return (
-                  <div>
-                    <ul>
-                      <li> {model.description} </li>
-                    </ul>
-
-                    <a
-                      rel="noopener noreferrer"
-                      target="_blank"
-                      href={model.link}
-                    >
-                      go to link
-                    </a>
-                  </div>
-                );
-              }
-              return null;
+        <>
+          <Graphin
+            data={tree}
+            ref={graphRef}
+            theme={{ mode: "dark" }}
+            fitView
+            style={{ width: "100%", height: "100%" }}
+            layout={{
+              type: "compactBox",
+              direction: "TB",
+              getId: function getId(d: { id: any }) {
+                return d.id;
+              },
+              getHeight: function getHeight() {
+                return 16;
+              },
+              getWidth: function getWidth() {
+                return 200;
+              },
+              getVGap: function getVGap() {
+                return 80;
+              },
+              getHGap: function getHGap() {
+                return 20;
+              },
             }}
-          </Tooltip>
-          <button onClick={exportGraph}>Export Graph</button>
-        </Graphin>
+          >
+            {/* <FitView /> */}
+            <TreeCollapse trigger="click" />
+            <ActivateRelations />
+            {/* <Hoverable bindType="node" /> */}
+            <SampleBehaviour setTreeNode={setTreeNode} />
+            <Tooltip
+              bindType="node"
+              placement="top"
+              hasArrow={true}
+              style={{ width: "400px", opacity: 1 }}
+            >
+              {(value: TooltipValue) => {
+                if (value.model) {
+                  const node = value.item as INode;
+                  const model = node.getModel() as unknown as TreeNode;
+                  return (
+                    <div>
+                      <ul>
+                        <li> {model.description} </li>
+                      </ul>
+
+                      {/* <a
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        href={model.link}
+                      >
+                        go to link
+                      </a> */}
+                      {model.link != "" ? (
+                        <Button
+                          color="primary"
+                          radius="full"
+                          size="sm"
+                          variant="solid"
+                          // onClick={window.open(model.link, "_blank")}
+                          onClick={() => openNewTab(model.link)}
+                        >
+                          Go to link
+                        </Button>
+                      ) : null}
+                    </div>
+                  );
+                }
+                return null;
+              }}
+            </Tooltip>
+            {/* <Toolbar /> */}
+            {/* <button onClick={exportGraph}>Export Graph</button> */}
+          </Graphin>
+          {/* <Card className="max-w-[340px]">
+            <CardHeader className="justify-between">
+              <div className="flex gap-5">
+                <Avatar
+                  isBordered
+                  radius="full"
+                  size="md"
+                  src="/avatars/avatar-1.png"
+                />
+                <div className="flex flex-col gap-1 items-start justify-center">
+                  <h4 className="text-small font-semibold leading-none text-default-600">
+                    Zoey Lang
+                  </h4>
+                  <h5 className="text-small tracking-tight text-default-400">
+                    @zoeylang
+                  </h5>
+                </div>
+              </div>
+              <Button
+                color="primary"
+                radius="full"
+                size="sm"
+                variant="solid"
+                onClick={exportGraph}
+              >
+                Export graph
+              </Button>
+            </CardHeader>
+            <CardBody className="px-3 py-0 text-small text-default-400">
+              <p>
+                Frontend developer and UI/UX enthusiast. Join me on this coding
+                adventure!
+              </p>
+              <span className="pt-2">
+                #FrontendWithZoey
+                <span className="py-2" aria-label="computer" role="img">
+                  💻
+                </span>
+              </span>
+            </CardBody>
+            <CardFooter className="gap-3">
+              <div className="flex gap-1">
+                <p className="font-semibold text-default-400 text-small">4</p>
+                <p className=" text-default-400 text-small">Following</p>
+              </div>
+              <div className="flex gap-1">
+                <p className="font-semibold text-default-400 text-small">
+                  97.1K
+                </p>
+                <p className="text-default-400 text-small">Followers</p>
+              </div>
+            </CardFooter>
+          </Card> */}
+        </>
       ) : (
         <div className="items-center justify-center">
           <CircularProgress

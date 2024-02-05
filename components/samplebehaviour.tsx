@@ -55,7 +55,6 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
           .post(url, String(model.title!).concat("!!!", model.description!), {
             headers: {
               "Content-Type": "text/plain",
-
               // Add any other headers as needed
             },
           })
@@ -79,16 +78,6 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
             }
             console.log("updated model", clone);
             setTreeNode(clone, clone.id);
-            // walk(tree, (node) => {
-            //   node.style = {
-            //     label: {
-            //       value: node.id, // add label
-            //     },
-            //   };
-            // });
-            // setState({
-            //   data: tree,
-            // });
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -108,7 +97,6 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
     } else {
       console.log("sample behaviour mount");
       isMounted.current = true;
-      // graph.on("node:click", handleClick);
     }
   });
 

@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 import requests
 from pathlib import Path
 import os
+os.system("python -m textblob.download_corpora ")
 
 from textblob import TextBlob
 from flask_cors import CORS

@@ -207,7 +207,7 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
             }}
           >
             {/* <TreeCollapse trigger="click" /> */}
-            <CustomTreeCollapse trigger="click"></CustomTreeCollapse>
+            {/* <CustomTreeCollapse trigger="click"></CustomTreeCollapse> */}
             <ActivateRelations />
             {/* <Hoverable bindType="node" /> */}
             <SampleBehaviour setTreeNode={setTreeNode} />

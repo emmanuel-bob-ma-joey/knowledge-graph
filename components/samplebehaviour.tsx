@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useContext, useRef } from "react";
 import dynamic from "next/dynamic";
 
@@ -32,9 +31,9 @@ interface TreeNode {
   style: any;
 }
 
-export interface SampleBehaviourProps {
+export type SampleBehaviourProps = {
   setTreeNode: (treenode: TreeNode, id: string) => void;
-}
+};
 
 const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
   const { graph, apis } = useContext(GraphinContext);
@@ -64,7 +63,7 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
     //   model.collapsed = collapsed;
     // };
 
-    const handleClick = async (evt: IG6GraphEvent) => {
+    const handleClick = (evt: IG6GraphEvent) => {
       console.log("node clicked");
       const node = evt.item as INode;
       const model = node.getModel() as unknown as TreeNode;
@@ -106,18 +105,23 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
     };
 
     if (isMounted.current) {
-      console.log("sample behaviour rendered");
+      //console.log("sample behaviour rendered");
       graph.on("node:click", handleClick);
-      console.log("after click on");
+      //console.log("after click on");
       return () => {
         graph.off("node:click", handleClick);
       };
     } else {
-      console.log("sample behaviour mount");
+      //console.log("sample behaviour mount");
 
       isMounted.current = true;
+      graph.on("node:click", handleClick);
+      //console.log("after click on");
+      return () => {
+        graph.off("node:click", handleClick);
+      };
     }
-  }, []);
+  });
 
   return null;
 };

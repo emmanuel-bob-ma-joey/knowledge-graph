@@ -75,8 +75,6 @@ const Home: React.FC = forwardRef((props, ref) => {
             <h1 className={title({ color: "violet" })}>
               knowledge graphs&nbsp;
             </h1>
-
-            {/* <h1 className={title()}>Knowledge Graphs.</h1> */}
             <h2 className={subtitle({ class: "mt-4" })}>
               Enter text to get started
             </h2>
@@ -92,30 +90,11 @@ const Home: React.FC = forwardRef((props, ref) => {
               GitHub
             </Link>
           </div>
-          {/* <h2 className={subtitle({ class: "mt-4" })}>
-        "A transformer is a deep learning architecture based on the multi-head
-        attention mechanism. // It is notable for not containing any recurrent
-        units, and thus requires less training time than previous recurrent
-        neural architectures, // such as long short-term memory."
-      </h2> */}
           <div className="mt-8  min-w-lg">
-            {/* <Textarea
-              // isInvalid={false}
-              variant="bordered"
-              // placeholder="Enter your text"
-              placeholder="A transformer is a deep learning architecture based on the multi-head attention mechanism.
-              It is notable for not containing any recurrent units, and thus requires less training time than previous recurrent neural architectures,
-              such as long short-term memory."
-              value={value}
-              onValueChange={setValue}
-              // errorMessage="The description should be at least 255 characters long."
-              className="max-w-xs"
-            /> */}
-
             <Textarea
-              isRequired
-              label="Input"
-              labelPlacement="outside"
+              // isRequired
+              // label="Required"
+              // labelPlacement="outside"
               variant="bordered"
               size="lg"
               placeholder={defaultstring}
@@ -123,12 +102,8 @@ const Home: React.FC = forwardRef((props, ref) => {
               disableAutosize
               // className="w-auto"
               //className="max-w-xs"
-              className="w-96 min-h-full"
+              className=" w-auto sm:w-96 min-h-full "
               style={{ height: "200px" }}
-              // classNames={{
-              //   base: "w-96",
-              //   input: "resize-y min-h-[40px]",
-              // }}
             />
             <Button
               radius="full"

@@ -305,6 +305,8 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
           <CircularProgress
             color="secondary"
             aria-label="Loading..."
+            label="Loading..."
+            // labelColor="secondary"
             size="lg"
           />
         </div>

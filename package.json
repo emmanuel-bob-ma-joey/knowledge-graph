@@ -7,7 +7,7 @@
     "next-dev": "next dev",
     "dev": "concurrently \"npm run next-dev\" \"npm run flask-dev\"",
     "build": "next build",
-    "start": "next start",
+    "start": " NODE_ENV=development next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -49,5 +49,10 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.45"
-  }
+  },
+  "sideEffects": [
+    "app/components/samplebehaviour.tsx",
+    "app/components/customtreecollapse.tsx",
+    "app/components/compactbox.tsx"
+  ]
 }

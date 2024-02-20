@@ -55,9 +55,9 @@ const CustomTreeCollapse: React.FunctionComponent<TreeCollapseProps> = (
     //graph.on("node:click", handleChange);
     return () => {
       graph.off("itemcollapsed", handleChange);
-      //graph.on("node:click", handleChange);
+      //graph.off("node:click", handleChange);
     };
-  }, []);
+  });
 
   return null;
 };

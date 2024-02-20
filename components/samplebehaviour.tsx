@@ -1,4 +1,19 @@
+"use client";
 import React, { useEffect, useContext, useRef } from "react";
+import dynamic from "next/dynamic";
+
+// const Graphin = dynamic(() => import("@antv/graphin"), {
+//   ssr: false,
+// });
+// const Behaviors = dynamic(() => import("@antv/graphin"), {
+//   ssr: false,
+// });
+// const IG6GraphEvent = dynamic(() => import("@antv/graphin"), {
+//   ssr: false,
+// });
+// const GraphinContext = dynamic(() => import("@antv/graphin"), {
+//   ssr: false,
+// });
 
 import Graphin, {
   Behaviors,
@@ -17,37 +32,40 @@ interface TreeNode {
   style: any;
 }
 
-interface SampleBehaviourProps {
+export interface SampleBehaviourProps {
   setTreeNode: (treenode: TreeNode, id: string) => void;
 }
-
-const uniqueId = () => {
-  const dateString = Date.now().toString(36);
-  const randomness = Math.random().toString(36).substr(2);
-  return dateString + randomness;
-};
 
 const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
   const { graph, apis } = useContext(GraphinContext);
   console.log("graph", graph);
+  console.log("this is samplebehaviour");
   const url = "https://knowledge-graph-backend.vercel.app/";
   const isMounted = useRef(false);
+
+  const uniqueId = () => {
+    const dateString = Date.now().toString(36);
+    const randomness = Math.random().toString(36).substr(2);
+    return dateString + randomness;
+  };
+
   useEffect(() => {
     //console.log("samplebehaviour has been rendered");
-    const handleHover = (evt: IG6GraphEvent) => {
-      console.log("node hovered");
-      const node = evt.item as INode;
-      const model = node.getModel() as NodeConfig;
-      //apis.focusNodeById(model.id);
-    };
+    // const handleHover = (evt: IG6GraphEvent) => {
+    //   console.log("node hovered");
+    //   const node = evt.item as INode;
+    //   const model = node.getModel() as NodeConfig;
+    //   //apis.focusNodeById(model.id);
+    // };
 
-    const handleChange = (e: IG6GraphEvent) => {
-      const { item, collapsed } = e;
-      const model = item!.get("model");
-      model.collapsed = collapsed;
-    };
+    // const handleChange = (e: IG6GraphEvent) => {
+    //   const { item, collapsed } = e;
+    //   const model = item!.get("model");
+    //   model.collapsed = collapsed;
+    // };
 
     const handleClick = async (evt: IG6GraphEvent) => {
+      console.log("node clicked");
       const node = evt.item as INode;
       const model = node.getModel() as unknown as TreeNode;
       if (model.children!.length == 0) {
@@ -90,15 +108,16 @@ const SampleBehaviour: React.FC<SampleBehaviourProps> = ({ setTreeNode }) => {
     if (isMounted.current) {
       console.log("sample behaviour rendered");
       graph.on("node:click", handleClick);
-
+      console.log("after click on");
       return () => {
         graph.off("node:click", handleClick);
       };
     } else {
       console.log("sample behaviour mount");
+
       isMounted.current = true;
     }
-  });
+  }, []);
 
   return null;
 };

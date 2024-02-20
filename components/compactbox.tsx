@@ -1,4 +1,6 @@
-import React, { useEffect, useContext, useRef } from "react";
+"use client";
+import React, { useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import {
   CircularProgress,
   Card,
@@ -8,23 +10,19 @@ import {
   Avatar,
   Button,
 } from "@nextui-org/react";
-import type { Graph, TooltipValue } from "@antv/graphin";
-import { Toolbar } from "@antv/graphin-components";
-import G6 from "@antv/g6";
-import Graphin, {
-  Behaviors,
-  Components,
-  IG6GraphEvent,
-  GraphinContext,
-} from "@antv/graphin";
-import GraphinInstance from "@antv/graphin";
-import { INode, NodeConfig } from "@antv/g6";
+import type { TooltipValue } from "@antv/graphin";
+import Graphin, { Behaviors, Components } from "@antv/graphin";
+
+import { INode } from "@antv/g6";
 import axios from "axios";
 import SampleBehaviour from "../components/samplebehaviour";
+// const SampleBehaviour = dynamic(() => import("../components/samplebehaviour"), {
+//   ssr: false,
+// });
 import CustomTreeCollapse from "./customtreecollapse";
 const { ActivateRelations, Hoverable, TreeCollapse } = Behaviors;
 const { Tooltip } = Components;
-
+// import { Tooltip } from "@antv/graphin-components";
 interface TreeNode {
   id: string;
   title: string;
@@ -58,10 +56,15 @@ const walk = (
   callback: { (node: any): void; (arg0: any): void }
 ) => {
   callback(node);
-  if (node.children && node.children.length !== 0) {
-    node.children.forEach((n) => {
-      walk(n, callback);
-    });
+  if (typeof node.children !== "undefined") {
+    if (node.children !== null) {
+      //and is not null
+      if (node.children && node.children.length !== 0) {
+        node.children.forEach((n) => {
+          walk(n, callback);
+        });
+      }
+    }
   }
 };
 export type PlacementType = "top" | "bottom" | "right" | "left";
@@ -135,14 +138,14 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
             });
           }
           //tree.collapse = false;
-          walk(copy, (node) => {
-            node.style = {
-              label: {
-                value: node.title, // add label
-              },
-            };
-            //node.collapse = true;
-          });
+          // walk(copy, (node) => {
+          //   node.style = {
+          //     label: {
+          //       value: node.title, // add label
+          //     },
+          //   };
+          //   node.collapse = true;
+          // });
           setTree(copy);
           setLoading(false);
         })
@@ -203,8 +206,8 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
               },
             }}
           >
-            {/* <FitView /> */}
-            <TreeCollapse trigger="click" />
+            {/* <TreeCollapse trigger="click" /> */}
+            <CustomTreeCollapse trigger="click"></CustomTreeCollapse>
             <ActivateRelations />
             {/* <Hoverable bindType="node" /> */}
             <SampleBehaviour setTreeNode={setTreeNode} />
@@ -223,21 +226,12 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
                       <ul>
                         <li> {model.description} </li>
                       </ul>
-
-                      {/* <a
-                        rel="noopener noreferrer"
-                        target="_blank"
-                        href={model.link}
-                      >
-                        go to link
-                      </a> */}
                       {model.link != "" ? (
                         <Button
                           color="primary"
                           radius="full"
                           size="sm"
                           variant="solid"
-                          // onClick={window.open(model.link, "_blank")}
                           onClick={() => openNewTab(model.link)}
                         >
                           Go to link

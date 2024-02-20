@@ -9,6 +9,12 @@ import React, { forwardRef } from "react";
 import { Button, Textarea } from "@nextui-org/react";
 
 import CompactBox from "../components/compactbox";
+// import { TextArea } from "../components/textarea";
+
+// import dynamic from "next/dynamic";
+// const CompactBox = dynamic(() => import("../components/compactbox"), {
+//   ssr: false,
+// });
 
 var pos = require("pos");
 
@@ -107,22 +113,26 @@ const Home: React.FC = forwardRef((props, ref) => {
             /> */}
 
             <Textarea
-              label="Description"
+              isRequired
+              label="Input"
               labelPlacement="outside"
-              placeholder="A transformer is a deep learning architecture based on the multi-head attention mechanism.
-              It is notable for not containing any recurrent units, and thus requires less training time than previous recurrent neural architectures,
-              such as long short-term memory."
+              variant="bordered"
+              size="lg"
+              placeholder={defaultstring}
               onValueChange={valueChanged}
-              minRows={4}
+              disableAutosize
               // className="w-auto"
-              classNames={{
-                base: "w-96",
-                // input: "resize-y min-h-[40px]",
-              }}
+              //className="max-w-xs"
+              className="w-96 min-h-full"
+              style={{ height: "200px" }}
+              // classNames={{
+              //   base: "w-96",
+              //   input: "resize-y min-h-[40px]",
+              // }}
             />
             <Button
               radius="full"
-              className="bg-gradient-to-tr from-pink-500 to-orange-500 text-white shadow-lg"
+              className="bg-gradient-to-tr from-pink-500 to-orange-500 text-white shadow-lg mt-8"
               onPress={handleSubmit}
             >
               Generate graph

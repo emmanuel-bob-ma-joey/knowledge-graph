@@ -1,6 +1,12 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { title, subtitle } from "@/components/primitives";
+import { siteConfig } from "@/config/site";
+import { Link } from "@nextui-org/link";
+import { GithubIcon } from "@/components/icons";
+import { button as buttonStyles } from "@nextui-org/theme";
+
 import {
   CircularProgress,
   Card,
@@ -16,6 +22,7 @@ import Graphin, { Behaviors, Components } from "@antv/graphin";
 import { INode } from "@antv/g6";
 import axios from "axios";
 import SampleBehaviour from "../components/samplebehaviour";
+import AccordionComponent from "../components/accordion";
 // const SampleBehaviour = dynamic(() => import("../components/samplebehaviour"), {
 //   ssr: false,
 // });
@@ -77,7 +84,7 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
   const graphRef = useRef(null);
 
   const setTreeNode = (treenode: TreeNode, id: string) => {
-    //assumes id is garuant
+    //assumes id is garuanteed to exist
     console.log("current tree", tree);
     let clone = structuredClone(tree);
     //setTree(clone);
@@ -246,22 +253,16 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
             {/* <Toolbar /> */}
             {/* <button onClick={exportGraph}>Export Graph</button> */}
           </Graphin>
-          {/* <Card className="max-w-[340px]">
+          <Card className="max-w-[340px] h-screen">
             <CardHeader className="justify-between">
               <div className="flex gap-5">
-                <Avatar
-                  isBordered
-                  radius="full"
-                  size="md"
-                  src="/avatars/avatar-1.png"
-                />
                 <div className="flex flex-col gap-1 items-start justify-center">
-                  <h4 className="text-small font-semibold leading-none text-default-600">
-                    Zoey Lang
-                  </h4>
-                  <h5 className="text-small tracking-tight text-default-400">
-                    @zoeylang
-                  </h5>
+                  {/* <h4 className="text-small font-semibold leading-none text-default-600">
+                    Knowledge Graph
+                  </h4> */}
+                  <h3 className={subtitle({ color: "blue" })}>
+                    Generated graph
+                  </h3>
                 </div>
               </div>
               <Button
@@ -275,30 +276,24 @@ const CompactBox: React.FC<CompactBoxProps> = ({ treeData }) => {
               </Button>
             </CardHeader>
             <CardBody className="px-3 py-0 text-small text-default-400">
-              <p>
-                Frontend developer and UI/UX enthusiast. Join me on this coding
-                adventure!
-              </p>
-              <span className="pt-2">
-                #FrontendWithZoey
-                <span className="py-2" aria-label="computer" role="img">
-                  💻
-                </span>
-              </span>
+              <AccordionComponent tree={tree} />
             </CardBody>
             <CardFooter className="gap-3">
               <div className="flex gap-1">
-                <p className="font-semibold text-default-400 text-small">4</p>
-                <p className=" text-default-400 text-small">Following</p>
-              </div>
-              <div className="flex gap-1">
-                <p className="font-semibold text-default-400 text-small">
-                  97.1K
-                </p>
-                <p className="text-default-400 text-small">Followers</p>
+                <Link
+                  isExternal
+                  className={buttonStyles({
+                    variant: "bordered",
+                    radius: "full",
+                  })}
+                  href={siteConfig.links.github}
+                >
+                  <GithubIcon size={20} />
+                  GitHub
+                </Link>
               </div>
             </CardFooter>
-          </Card> */}
+          </Card>
         </>
       ) : (
         <div className="items-center justify-center">

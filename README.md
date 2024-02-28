@@ -2,7 +2,7 @@
 
 A web app that constructs a knowledge graph using input text.
 
-#Description
+# Description
 
 The user inputs a text excerpt e.g. lecture notes, which becomes the root node of the graph. The noun phrases are extracted from the text to create the child nodes, and the content populated using the Wikipedia API. An interactive graph is generated, and child nodes can be clicked to further expand the graph.
 

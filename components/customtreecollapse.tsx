@@ -47,6 +47,7 @@ const CustomTreeCollapse: React.FunctionComponent<TreeCollapseProps> = (
       const { item, collapsed } = e;
       const model = item!.get("model");
       console.log("this is the model", model);
+      console.log(typeof model);
       console.log("collapsed is", collapsed);
 
       model.collapsed = collapsed;
